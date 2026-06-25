@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astranyx — Space · AI · Energy Systems</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08090B;
+    --surface:#14171A;
+    --border:#1F2428;
+    --text:#F5F6F4;
+    --text-dim:#7A8088;
+    --accent:#3CFF8A;
+    --accent-dim:rgba(60,255,138,0.12);
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+
+  a{color:inherit;text-decoration:none;}
+
+  .wrap{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ===== NAV ===== */
+  header{
+    position:fixed;
+    top:0;left:0;right:0;
+    z-index:100;
+    background:rgba(8,9,11,0.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 32px;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:18px;
+    letter-spacing:0.04em;
+  }
+  .logo-mark{height:24px;width:auto;display:block;}
+  .nav-links{
+    display:flex;
+    gap:36px;
+    font-size:14px;
+    color:var(--text-dim);
+  }
+  .nav-links a{transition:color 0.2s;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-cta{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.05em;
+    padding:9px 18px;
+    border:1px solid var(--border);
+    border-radius:2px;
+    transition:border-color 0.2s, color 0.2s;
+  }
+  .nav-cta:hover{border-color:var(--accent);color:var(--accent);}
+
+  @media(max-width:860px){
+    .nav-links{display:none;}
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding-top:100px;
+    position:relative;
+  }
+
+  .hero-grid-bg{
+    position:absolute;
+    inset:0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:0.35;
+    mask-image:radial-gradient(ellipse 70% 60% at 50% 35%, black 10%, transparent 75%);
+    pointer-events:none;
+  }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.12em;
+    color:var(--accent);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:28px;
+    opacity:0;
+    animation:fadeUp 0.7s ease forwards;
+  }
+  .eyebrow .dot{
+    width:6px;height:6px;
+    background:var(--accent);
+    border-radius:50%;
+    box-shadow:0 0 8px var(--accent);
+    animation:pulse 2s ease-in-out infinite;
+  }
+
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(40px, 7vw, 92px);
+    line-height:0.98;
+    letter-spacing:-0.01em;
+    max-width:880px;
+    opacity:0;
+    animation:fadeUp 0.8s ease 0.1s forwards;
+  }
+  .hero h1 .accent{color:var(--accent);}
+
+  .hero p{
+    font-size:18px;
+    color:var(--text-dim);
+    max-width:560px;
+    margin-top:28px;
+    opacity:0;
+    animation:fadeUp 0.8s ease 0.25s forwards;
+  }
+
+  .hero-actions{
+    display:flex;
+    gap:16px;
+    margin-top:40px;
+    opacity:0;
+    animation:fadeUp 0.8s ease 0.4s forwards;
+  }
+  .btn{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:0.04em;
+    padding:14px 26px;
+    border-radius:2px;
+    transition:all 0.2s;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:#08090B;
+    font-weight:600;
+  }
+  .btn-primary:hover{
+    box-shadow:0 0 24px rgba(60,255,138,0.35);
+    transform:translateY(-1px);
+  }
+  .btn-secondary{
+    border:1px solid var(--border);
+    color:var(--text);
+  }
+  .btn-secondary:hover{border-color:var(--text-dim);}
+
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(16px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;}
+    50%{opacity:0.3;}
+  }
+
+  /* ===== TELEMETRY STRIP (signature element) ===== */
+  .telemetry{
+    margin-top:80px;
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(60,255,138,0.03), transparent);
+    opacity:0;
+    animation:fadeUp 0.8s ease 0.55s forwards;
+  }
+  .telemetry-inner{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+  }
+  .telemetry-cell{
+    padding:20px 32px;
+    border-right:1px solid var(--border);
+  }
+  .telemetry-cell:last-child{border-right:none;}
+  .telemetry-label{
+    font-family:var(--font-mono);
+    font-size:10px;
+    letter-spacing:0.1em;
+    color:var(--text-dim);
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .telemetry-label::before{
+    content:'';
+    width:4px;height:4px;
+    background:var(--accent);
+    border-radius:50%;
+  }
+  .telemetry-value{
+    font-family:var(--font-mono);
+    font-size:15px;
+    color:var(--text);
+  }
+  .telemetry-value .unit{color:var(--text-dim);font-size:12px;}
+
+  @media(max-width:760px){
+    .telemetry-inner{grid-template-columns:repeat(2, 1fr);}
+    .telemetry-cell:nth-child(2){border-right:none;}
+  }
+
+  /* mini version used as section divider */
+  .divider-strip{
+    height:1px;
+    background:var(--border);
+    position:relative;
+    margin:0 32px;
+  }
+  .divider-strip::after{
+    content:'';
+    position:absolute;
+    top:-1px;left:0;
+    width:64px;height:2px;
+    background:var(--accent);
+  }
+
+  /* ===== SECTION SHARED ===== */
+  section{padding:140px 0;}
+  .section-head{
+    margin-bottom:64px;
+    max-width:640px;
+  }
+  .section-eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.1em;
+    color:var(--accent);
+    margin-bottom:18px;
+  }
+  .section-head h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(28px, 4vw, 44px);
+    letter-spacing:-0.01em;
+  }
+  .section-head p{
+    color:var(--text-dim);
+    font-size:16px;
+    margin-top:18px;
+  }
+
+  /* ===== DOMAINES (asymmetric 2-1) ===== */
+  .domains{
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+  }
+  .domain-card{
+    background:var(--bg);
+    padding:48px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:320px;
+    transition:background 0.3s;
+  }
+  .domain-card:hover{background:var(--surface);}
+  .domain-card.tall{grid-row:span 2;min-height:660px;}
+  .domain-icon{
+    width:44px;height:44px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:32px;
+  }
+  .domain-icon svg{width:22px;height:22px;stroke:var(--accent);}
+  .domain-card h3{
+    font-family:var(--font-display);
+    font-size:24px;
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  .domain-card p{
+    color:var(--text-dim);
+    font-size:15px;
+    max-width:420px;
+  }
+  .domain-tag{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--text-dim);
+    letter-spacing:0.06em;
+    margin-top:28px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .domain-tag span{
+    border:1px solid var(--border);
+    padding:5px 10px;
+    border-radius:2px;
+  }
+
+  @media(max-width:860px){
+    .domains{grid-template-columns:1fr;}
+    .domain-card.tall{grid-row:auto;min-height:320px;}
+  }
+
+  /* ===== PROJECT PANEL ===== */
+  .project-panel{
+    display:grid;
+    grid-template-columns:1.6fr 1fr;
+    border:1px solid var(--border);
+    background:var(--surface);
+  }
+  .project-panel-main{
+    padding:48px;
+    border-right:1px solid var(--border);
+  }
+  .project-status{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--accent);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .dot-live{
+    width:7px;height:7px;
+    background:var(--accent);
+    border-radius:50%;
+    box-shadow:0 0 8px var(--accent);
+    animation:pulse 2s ease-in-out infinite;
+  }
+  .project-panel-main h3{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:26px;
+    margin-bottom:16px;
+    max-width:520px;
+  }
+  .project-panel-main p{
+    color:var(--text-dim);
+    font-size:15px;
+    max-width:560px;
+  }
+  .project-panel-specs{
+    padding:48px 36px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:18px;
+  }
+  .spec-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.04em;
+    color:var(--text-dim);
+    padding-bottom:14px;
+    border-bottom:1px solid var(--border);
+  }
+  .spec-row:last-child{border-bottom:none;padding-bottom:0;}
+  .spec-val{color:var(--text);font-size:12px;}
+  .spec-val.accent-text{color:var(--accent);}
+
+  @media(max-width:860px){
+    .project-panel{grid-template-columns:1fr;}
+    .project-panel-main{border-right:none;border-bottom:1px solid var(--border);}
+  }
+  @media(max-width:600px){
+    .project-panel-main, .project-panel-specs{padding:32px 24px;}
+  }
+
+  /* ===== APPROACH (diagram) ===== */
+  .approach{
+    background:var(--surface);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+  }
+  .approach-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:64px;
+    align-items:center;
+  }
+  .approach-text h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(26px,3.6vw,38px);
+    letter-spacing:-0.01em;
+    margin-bottom:20px;
+  }
+  .approach-text p{
+    color:var(--text-dim);
+    font-size:15px;
+    margin-bottom:16px;
+  }
+  .approach-list{
+    margin-top:28px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .approach-list-item{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--text-dim);
+  }
+  .approach-list-item .mark{color:var(--accent);}
+
+  @media(max-width:860px){
+    .approach-grid{grid-template-columns:1fr;}
+  }
+
+  /* ===== STATUS / CTA ===== */
+  .cta-section{
+    text-align:center;
+  }
+  .cta-section .section-head{margin:0 auto 40px;text-align:center;}
+  .cta-section .section-eyebrow{justify-content:center;display:flex;}
+  .cta-buttons{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer{
+    border-top:1px solid var(--border);
+    padding:48px 0;
+  }
+  .footer-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:24px;
+  }
+  .footer-status{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--text-dim);
+    letter-spacing:0.06em;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .footer-status .dot{
+    width:6px;height:6px;
+    background:var(--accent);
+    border-radius:50%;
+  }
+  .footer-links{
+    display:flex;
+    gap:28px;
+    font-size:13px;
+    color:var(--text-dim);
+  }
+  .footer-links a:hover{color:var(--text);}
+
+  /* reveal on scroll */
+  .reveal{
+    opacity:0;
+    transform:translateY(20px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  @media(max-width:600px){
+    .wrap{padding:0 20px;}
+    nav{padding:16px 20px;}
+    section{padding:90px 0;}
+    .telemetry-cell{padding:16px 20px;}
+    .domain-card{padding:32px 24px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 1254 1254" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g transform="translate(0,1254) scale(0.1,-0.1)" fill="currentColor" stroke="none">
+        <path d="M6737 10425 c-33 -8 -98 -34 -145 -57 -153 -74 -297 -241 -343 -397
+-14 -49 -15 -49 -149 -86 -476 -130 -920 -465 -1225 -925 -242 -364 -404 -795
+-471 -1250 -21 -149 -29 -467 -15 -630 50 -575 252 -1158 566 -1630 251 -377
+572 -672 910 -835 110 -53 274 -110 296 -103 6 2 -20 31 -57 63 -399 347 -675
+695 -890 1125 -246 493 -366 977 -368 1485 -1 227 10 335 55 554 132 649 503
+1219 999 1536 67 43 345 185 362 185 3 0 21 -26 39 -57 18 -32 69 -95 114
+-140 66 -66 98 -90 166 -122 46 -22 111 -47 144 -56 76 -19 243 -20 320 0 155
+39 325 161 413 297 241 370 63 876 -360 1025 -91 33 -268 41 -361 18z M7681
+9402 l-30 -47 32 -25 c18 -13 70 -60 116 -105 196 -189 358 -446 466 -743 26
+-73 50 -130 52 -128 8 8 -93 296 -147 423 -64 149 -114 241 -203 371 -60 89
+-218 279 -246 296 -5 3 -23 -16 -40 -42z M6175 7850 c-294 -21 -622 -93 -812
+-176 -69 -31 -166 -85 -160 -90 2 -2 62 5 133 15 309 46 626 51 949 15 612
+-67 1242 -292 1754 -627 229 -150 362 -257 550 -441 445 -434 739 -959 826
+-1472 13 -78 26 -183 27 -234 l3 -93 -79 -18 c-117 -28 -207 -80 -302 -174
+-207 -206 -255 -502 -123 -760 22 -43 38 -79 37 -80 -305 -216 -693 -327
+-1146 -326 -258 1 -399 16 -622 67 -88 20 166 -81 309 -123 183 -53 446 -93
+621 -93 341 0 737 103 990 259 l47 29 69 -34 c102 -49 195 -68 318 -61 119 6
+205 30 295 85 143 86 241 206 294 361 26 74 30 102 31 196 1 121 -12 186 -54
+282 -36 80 -82 146 -143 205 l-48 48 10 128 c21 256 -24 553 -128 855 -377
+1088 -1483 1967 -2771 2201 -283 52 -634 74 -875 56z M3699 6816 c-285 -241
+-497 -505 -657 -817 -177 -346 -259 -715 -224 -1009 l11 -85 -77 -76 c-90 -91
+-143 -175 -179 -284 -37 -113 -37 -266 -1 -377 36 -108 90 -200 162 -273 81
+-83 166 -136 273 -171 77 -25 103 -29 208 -29 125 0 201 17 298 67 l40 20 41
+-31 c202 -152 546 -279 897 -332 190 -29 548 -31 744 -5 930 122 1777 620
+2377 1396 152 196 333 506 433 740 114 266 217 669 215 842 -1 41 -2 39 -34
+-47 -101 -276 -263 -591 -447 -867 -381 -572 -959 -1055 -1601 -1339 -456
+-201 -888 -291 -1328 -276 -338 12 -625 79 -911 213 -54 26 -99 52 -99 58 1 6
+7 38 15 71 21 87 19 226 -5 319 -46 182 -176 343 -345 425 -93 45 -177 64
+-295 66 l-105 1 -12 69 c-36 205 -25 427 32 650 44 172 81 271 164 440 119
+241 279 468 475 673 43 45 77 82 74 82 -3 0 -65 -51 -139 -114z"/>
+        </g>
+      </svg>
+      ASTRANYX
+    </div>
+    <div class="nav-links">
+      <a href="#domains">Research Areas</a>
+      <a href="#project">Current Project</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="nav-cta">CONTACT →</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero wrap" style="padding-top:0;">
+    <div class="hero-grid-bg"></div>
+    <div class="eyebrow"><span class="dot"></span>RESEARCH PHASE — FOUNDED 2026</div>
+    <h1>We're laying the foundations<br>for tomorrow's <span class="accent">systems</span>.</h1>
+    <p>Astranyx is in a research phase across three converging areas: space exploration, embedded artificial intelligence, and next-generation energy. We document every step, starting with a first precision system currently in development.</p>
+    <div class="hero-actions">
+      <a href="#project" class="btn btn-primary">VIEW CURRENT PROJECT</a>
+      <a href="#contact" class="btn btn-secondary">CONTACT US</a>
+    </div>
+
+    <div class="telemetry">
+      <div class="telemetry-inner">
+        <div class="telemetry-cell">
+          <div class="telemetry-label">SPACE</div>
+          <div class="telemetry-value">RESEARCH <span class="unit">/ CONCEPT</span></div>
+        </div>
+        <div class="telemetry-cell">
+          <div class="telemetry-label">AI-CORE</div>
+          <div class="telemetry-value">RESEARCH <span class="unit">/ CONCEPT</span></div>
+        </div>
+        <div class="telemetry-cell">
+          <div class="telemetry-label">PROTOTYPE-01</div>
+          <div class="telemetry-value">IN <span class="unit">DEVELOPMENT</span></div>
+        </div>
+        <div class="telemetry-cell">
+          <div class="telemetry-label">STATUS</div>
+          <div class="telemetry-value">ACTIVE <span class="unit">2026</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOMAINS -->
+  <section id="domains" class="wrap reveal">
+    <div class="section-head">
+      <div class="section-eyebrow">// RESEARCH AREAS</div>
+      <h2>Three areas, one direction.</h2>
+      <p>We're in a research phase across these three fronts. There's no finished product to show yet — but the direction is clear, and a first system is already underway.</p>
+    </div>
+
+    <div class="domains">
+      <div class="domain-card tall">
+        <div>
+          <div class="domain-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L19 20L12 16L5 20L12 2Z"/>
+            </svg>
+          </div>
+          <h3>Space Exploration</h3>
+          <p>Research into propulsion architectures and mission design tools. A long-term focus, still at the stage of technical study and scientific monitoring.</p>
+        </div>
+        <div class="domain-tag">
+          <span>TECHNICAL MONITORING</span>
+          <span>FEASIBILITY STUDY</span>
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div>
+          <div class="domain-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 2V5M12 19V22M22 12H19M5 12H2M19.07 4.93L16.95 7.05M7.05 16.95L4.93 19.07M19.07 19.07L16.95 16.95M7.05 7.05L4.93 4.93"/>
+            </svg>
+          </div>
+          <h3>Artificial Intelligence</h3>
+          <p>Research into control and embedded decision-making systems — already applied concretely in the first prototype's microcontroller.</p>
+        </div>
+        <div class="domain-tag">
+          <span>EMBEDDED CONTROL</span>
+          <span>FIRMWARE</span>
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div>
+          <div class="domain-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L4 14H12L11 22L20 10H12L13 2Z"/>
+            </svg>
+          </div>
+          <h3>Next-Generation Energy</h3>
+          <p>Study of high-density storage systems, upstream of any product application.</p>
+        </div>
+        <div class="domain-tag">
+          <span>RESEARCH</span>
+          <span>EARLY STAGE</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-strip"></div>
+
+  <!-- PROJECT -->
+  <section id="project" class="wrap reveal">
+    <div class="section-head">
+      <div class="section-eyebrow">// PROTOTYPE-01</div>
+      <h2>The first system comes out of the workshop.</h2>
+      <p>Rather than announcing a vision with nothing to show, we're documenting the first concrete object in development: a miniaturized precision robotic system combining pneumatic actuation and embedded control.</p>
+    </div>
+
+    <div class="project-panel">
+      <div class="project-panel-main">
+        <div class="project-status">
+          <span class="dot-live"></span>
+          IN DEVELOPMENT — TEST BENCH
+        </div>
+        <h3>Miniature Propulsion Actuation System</h3>
+        <p>A compact wrist-worn device designed to validate three disciplines at once under real-world conditions: high-precision micro-scale pneumatics, trigger mechanics, and anti-tangle management of a filament under tension. It's the kind of dense engineering problem that serves as a test bench before more ambitious systems.</p>
+        <div class="approach-list" style="margin-top:24px;">
+          <div class="approach-list-item"><span class="mark">→</span> 12g CO₂ cartridge actuation, dedicated pressure regulation</div>
+          <div class="approach-list-item"><span class="mark">→</span> Palm-integrated two-finger trigger, proprioceptive control</div>
+          <div class="approach-list-item"><span class="mark">→</span> Embedded control on RP2040 microcontroller</div>
+          <div class="approach-list-item"><span class="mark">→</span> Axial-spool anti-tangle system, high-strength filament</div>
+          <div class="approach-list-item"><span class="mark">→</span> Safety valve with calibrated release threshold</div>
+        </div>
+      </div>
+
+      <div class="project-panel-specs">
+        <div class="spec-row"><span>ACTUATION</span><span class="spec-val">CO₂ PNEUMATIC</span></div>
+        <div class="spec-row"><span>MCU</span><span class="spec-val">RP2040</span></div>
+        <div class="spec-row"><span>SENSORS</span><span class="spec-val">FSR × 2</span></div>
+        <div class="spec-row"><span>SAFETY</span><span class="spec-val">5 BAR VALVE</span></div>
+        <div class="spec-row"><span>CHASSIS</span><span class="spec-val">PETG / TPU</span></div>
+        <div class="spec-row"><span>PHASE</span><span class="spec-val accent-text">PROTOTYPING</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-strip"></div>
+
+  <!-- APPROACH -->
+  <section id="approach" class="approach">
+    <div class="wrap approach-grid reveal">
+      <div class="approach-text">
+        <div class="section-eyebrow">// OUR APPROACH</div>
+        <h2>Separate disciplines, one engineering pipeline.</h2>
+        <p>Rather than treating space, AI, and energy as silos, Astranyx designs them as a single pipeline: every advance in one area becomes a design constraint — and an opportunity — for the other two.</p>
+        <div class="approach-list">
+          <div class="approach-list-item"><span class="mark">→</span> Rapid prototyping, field validation</div>
+          <div class="approach-list-item"><span class="mark">→</span> Open internal technical documentation</div>
+          <div class="approach-list-item"><span class="mark">→</span> Decisions driven by test data</div>
+        </div>
+      </div>
+      <div class="approach-diagram">
+        <svg viewBox="0 0 420 360" width="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#3CFF8A"/>
+            </marker>
+          </defs>
+          <!-- connecting lines -->
+          <path d="M120 70 L210 160" stroke="#1F2428" stroke-width="1.5"/>
+          <path d="M300 70 L210 160" stroke="#1F2428" stroke-width="1.5"/>
+          <path d="M210 160 L210 260" stroke="#3CFF8A" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <!-- node: space -->
+          <rect x="40" y="30" width="160" height="64" rx="3" fill="#14171A" stroke="#1F2428"/>
+          <text x="120" y="56" fill="#F5F6F4" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="1">SPACE</text>
+          <text x="120" y="76" fill="#7A8088" font-family="JetBrains Mono" font-size="9" text-anchor="middle">FLIGHT DATA</text>
+
+          <!-- node: ai -->
+          <rect x="220" y="30" width="160" height="64" rx="3" fill="#14171A" stroke="#1F2428"/>
+          <text x="300" y="56" fill="#F5F6F4" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="1">AI-CORE</text>
+          <text x="300" y="76" fill="#7A8088" font-family="JetBrains Mono" font-size="9" text-anchor="middle">DECISION LAYER</text>
+
+          <!-- node: convergence -->
+          <rect x="130" y="160" width="160" height="64" rx="3" fill="#14171A" stroke="#3CFF8A"/>
+          <text x="210" y="186" fill="#3CFF8A" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="1">CONVERGENCE</text>
+          <text x="210" y="206" fill="#7A8088" font-family="JetBrains Mono" font-size="9" text-anchor="middle">SHARED PIPELINE</text>
+
+          <!-- node: energy -->
+          <rect x="130" y="260" width="160" height="64" rx="3" fill="#14171A" stroke="#1F2428"/>
+          <text x="210" y="286" fill="#F5F6F4" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="1">ENERGY</text>
+          <text x="210" y="306" fill="#7A8088" font-family="JetBrains Mono" font-size="9" text-anchor="middle">SYSTEM OUTPUT</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-strip"></div>
+
+  <!-- CTA -->
+  <section id="contact" class="wrap cta-section reveal">
+    <div class="section-head">
+      <div class="section-eyebrow">// GET IN TOUCH</div>
+      <h2>We document, you follow the progress.</h2>
+      <p>Astranyx is laying its first foundations. If this approach interests you — technical partners, the curious, or simply those who want to follow the development of the first prototype — we'd love to talk.</p>
+    </div>
+    <div class="cta-buttons">
+      <a href="mailto:astranyx.contacts@gmail.com" class="btn btn-primary">EMAIL THE TEAM →</a>
+      <a href="https://www.instagram.com/astranyx.hq/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">FOLLOW THE PROJECT ↗</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-status"><span class="dot"></span>ASTRANYX © 2026 — ALL SYSTEMS NOMINAL</div>
+    <div class="footer-links">
+      <a href="#domains">Domains</a>
+      <a href="#approach">Approach</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
